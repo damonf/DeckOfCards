@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using FluentAssertions;
 using TechTalk.SpecFlow;
 
 namespace DeckOfCards.Specs
@@ -34,8 +34,9 @@ namespace DeckOfCards.Specs
         [Then(@"there should be (.*) cards in the deck")]
         public void ThenThereShouldBeCardsInTheDeck(int cardsRemainingInDeck)
         {
-            // TODO: use the should library
-            Assert.AreEqual(cardsRemainingInDeck, _deck.CardsRemaining); 
+            _deck.CardsRemaining.Should()
+                .Be(cardsRemainingInDeck,
+                    $"because there should be {cardsRemainingInDeck} cards remaining in the deck");
         }
 
         [When(@"I deal a card")]
@@ -47,8 +48,8 @@ namespace DeckOfCards.Specs
         [Then(@"a card should be produced")]
         public void ThenACardShouldBeProduced()
         {
-            Assert.AreEqual(1, _cardsDealt.Count);
-            Assert.IsNotNull(_cardsDealt[0]);
+            _cardsDealt.Count.Should().Be(1, "because 1 card was dealt from the deck");
+            _cardsDealt[0].Should().NotBeNull("because a null card cannot be dealt from the deck");
         }
 
         [When(@"I deal all the cards")]
@@ -64,7 +65,9 @@ namespace DeckOfCards.Specs
         [Then(@"there should be (.*) cards")]
         public void ThenThereShouldBeCards(int expectedNumberOfCards)
         {
-            Assert.AreEqual(expectedNumberOfCards, _cardsDealt.Count, "Fewer cards dealt than expected");
+            _cardsDealt.Count.Should()
+                .Be(expectedNumberOfCards,
+                    $"because {expectedNumberOfCards} should have been dealt");
         }
         
         [Then(@"there should be the following cards")]
@@ -74,15 +77,18 @@ namespace DeckOfCards.Specs
             {
                 var exists =_cardsDealt.Exists(cardDealt => cardDealt == expectedCard);
 
-                Assert.IsTrue(exists, $"card not found '{expectedCard}'");
+                exists.Should().BeTrue($"because {expectedCard} should have been dealt");
             }
         }
         
         [Then(@"there should be (.*) jokers")]
-        public void ThenThereShouldBeJokers(int numberOfJokers)
+        public void ThenThereShouldBeJokers(int numberOfJokersExpected)
         {
             var jokersDealt = _cardsDealt.Count(c => c.Suit == Suit.Joker);
-            Assert.AreEqual(numberOfJokers, jokersDealt, "Incorret number of Jokers were dealt");
+
+            jokersDealt.Should()
+                .Be(numberOfJokersExpected,
+                    $"because {numberOfJokersExpected} jokers should have been dealt");
         }
 
         [Given(@"I have an empty deck")]
@@ -111,8 +117,8 @@ namespace DeckOfCards.Specs
         [Then(@"I am presented with an error")]
         public void ThenIAmPresentedWithAnError()
         {
-            Assert.IsNotNull(_error);
-            Assert.IsTrue(_error.Message.Contains("deck is empty"));
+            _error.Should().NotBeNull("because there should have been an error");
+            _error.Message.Should().Contain("deck is empty", "because the deck was empty");
         }
     }
 }

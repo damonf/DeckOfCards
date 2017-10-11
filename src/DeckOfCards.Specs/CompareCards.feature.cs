@@ -66,18 +66,20 @@ namespace DeckOfCards.Specs
         
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("Compare two cards")]
+        [NUnit.Framework.IgnoreAttribute("Ignored scenario")]
         public virtual void CompareTwoCards()
         {
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Compare two cards", ((string[])(null)));
-#line 6
-this.ScenarioSetup(scenarioInfo);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Compare two cards", new string[] {
+                        "ignore"});
 #line 7
-    testRunner.Given("I have a Two of Clubs", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+this.ScenarioSetup(scenarioInfo);
 #line 8
-    testRunner.And("I have a Three of Clubs", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+    testRunner.Given("I have a Two of Clubs", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line 9
-    testRunner.When("I compare the cards", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+    testRunner.And("I have a Three of Clubs", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line 10
+    testRunner.When("I compare the cards", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 11
     testRunner.Then("the Three of Clubs should be higher", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             this.ScenarioCleanup();

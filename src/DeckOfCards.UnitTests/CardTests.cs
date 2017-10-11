@@ -1,4 +1,4 @@
-﻿using System;
+﻿using FluentAssertions;
 using NUnit.Framework;
 
 namespace DeckOfCards.UnitTests
@@ -11,9 +11,9 @@ namespace DeckOfCards.UnitTests
         {
             var card = new Card(Suit.Clubs, Rank.Two);
 
-            Assert.IsNotNull(card);
-            Assert.AreEqual(Suit.Clubs, card.Suit, "Card has incorrect suit.");
-            Assert.AreEqual(Rank.Two, card.Rank, "Card has incorrect rank.");
+            card.Should().NotBeNull();
+            card.Suit.Should().Be(Suit.Clubs, "because the card is a Club");
+            card.Rank.Should().Be(Rank.Two, "because the card is a Two");
         }
 
         [Test]
@@ -21,8 +21,8 @@ namespace DeckOfCards.UnitTests
         {
             var card = new Card(Suit.Clubs, Rank.Two);
 
-            Assert.IsNotNull(card);
-            Assert.AreEqual("Two of Clubs", card.ToString(), "Card did not convert to correct string.");
+            card.Should()
+                .Match(c => c.ToString() == "Two of Clubs", "because the card is a Two of Clubs");
         }
 
         [Test]
@@ -30,8 +30,7 @@ namespace DeckOfCards.UnitTests
         {
             var card = new Card(Suit.Joker, Rank.Ace);
 
-            Assert.IsNotNull(card);
-            Assert.AreEqual("Joker", card.ToString());
+            card.Should().Match(c => c.ToString() == "Joker", "because the card is a Joker");
         }
 
         [Test]
@@ -40,7 +39,7 @@ namespace DeckOfCards.UnitTests
             var firstCard = new Card(Suit.Clubs, Rank.Two);
             var secondCard = new Card(Suit.Clubs, Rank.Two);
 
-            Assert.IsTrue(firstCard == secondCard, "Cards should be equal.");
+            firstCard.Should().Be(secondCard, "because they have the same suit and rank");
         }
 
         [Test]
@@ -49,7 +48,7 @@ namespace DeckOfCards.UnitTests
             var firstCard = new Card(Suit.Clubs, Rank.Two);
             var secondCard = new Card(Suit.Clubs, Rank.Three);
 
-            Assert.IsTrue(firstCard != secondCard, "Cards should not be equal.");
+            firstCard.Should().NotBe(secondCard, "because they do not have the same suit and rank");
         }
     }
 }

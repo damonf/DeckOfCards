@@ -3,6 +3,7 @@
     As a player
     I want to be able to compare cards
 
+@ignore
 Scenario: Compare two cards
     Given I have a Two of Clubs
     And I have a Three of Clubs

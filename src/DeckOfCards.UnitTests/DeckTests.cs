@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace DeckOfCards.UnitTests
@@ -14,18 +15,19 @@ namespace DeckOfCards.UnitTests
 
             var card = deck.DealCard();
 
-            Assert.IsNotNull(card, "DealCard did not produce a card");
+            card.Should().NotBeNull("because it was dealt from the deck");
         }
 
         [Test]
         public void Should_remove_the_dealt_card_from_the_deck()
         {
             var deck = Deck.CreateStandardDeck();
-            var count = deck.CardsRemaining;
+            var totalCards = deck.CardsRemaining;
 
             deck.DealCard();
 
-            Assert.AreEqual(count - 1, deck.CardsRemaining, "Cards remaining did not decrease");
+            deck.CardsRemaining.Should()
+                .Be(totalCards - 1, $"because 1 card was dealt from the deck of {totalCards}");
         }
 
         [Test]
@@ -40,9 +42,12 @@ namespace DeckOfCards.UnitTests
                 cardsDealt.Add(deck.DealCard());
             }
 
-            Assert.AreEqual(totalCards, cardsDealt.Count, "Cards dealt does not match the number of cards in the deck");
-            var nullIndex = cardsDealt.IndexOf(null);
-            Assert.IsTrue(nullIndex < 0, $"Card {nullIndex} dealt was null");
+            cardsDealt.Count.Should()
+                .Be(totalCards, $"because there were {totalCards} in the deck");
+
+            cardsDealt.Count(c => c == null)
+                .Should()
+                .BeLessThan(1, "because there cannot be any null cards dealt from the deck");
         }
 
         [Test]
@@ -56,8 +61,12 @@ namespace DeckOfCards.UnitTests
                 cardsDealt.Add(deck.DealCard());
             }
 
-            var numberOfJokersDealt = cardsDealt.Count(c => c.Suit == Suit.Joker);
-            Assert.AreEqual(2, numberOfJokersDealt, "Number of jokers was different from expected");
+
+            const int expectedJokers = 2;
+            cardsDealt.Count(c => c.Suit == Suit.Joker)
+                .Should()
+                .Be(expectedJokers,
+                    $"because there are {expectedJokers} jokers in a standard deck");
         }
     }
 }
